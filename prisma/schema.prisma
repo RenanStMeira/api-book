@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+//tabela
+model Books {
+  id String @id @default(uuid())
+  title String
+  description String?
+  author String
+  fileId String?
+  category Categories[]
+  createAdt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  //deixar o nome do banco com letra minuscula
+  @@map("books")
+}
+
+// Criar relacionamentos entre tabelas
+model Categories {
+  id String @id @default(uuid())
+  title String
+
+  Books Books? @relation(fields: [booksId], references: [id])
+  booksId String?
+
+   @@map("categories")
+}
+
+// Tabelas Usuarios
+model Users {
+  id String @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+
+   @@map("users")
+}
